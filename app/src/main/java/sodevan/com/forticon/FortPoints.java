@@ -13,10 +13,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
 
 public class FortPoints extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -24,6 +28,8 @@ public class FortPoints extends AppCompatActivity
 
     FirebaseDatabase database ;
     DatabaseReference reference ;
+    ArrayList<FortpointObject> ar ;
+    ListView lv ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,12 +38,39 @@ public class FortPoints extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
         Intent recieve  = getIntent() ;
         String Fortid =   recieve.getStringExtra("Fortid") ;
+        lv = (ListView)findViewById(R.id.lv1);
+
+
+        ar = new ArrayList<FortpointObject>() ;
 
 
         database = FirebaseDatabase.getInstance() ;
         reference = database.getReference("Fortpoints").child(Fortid) ;
+
+        FirebaseListAdapter<FortpointObject> adapter = new FirebaseListAdapter<FortpointObject>(this , FortpointObject.class ,  R.layout.fortpointsitem2, reference) {
+            @Override
+            protected void populateView(View v, FortpointObject model, int position) {
+
+
+                ar.add(model);
+
+
+                String name = model.getName() ;
+                String namespace = model.getNamespace() ;
+                String instance = model.getInstance()  ;
+                String photolink  = model.getPhotolink() ;
+                String text = model.getText() ;
+
+                TextView nametv = (TextView)v.findViewById(R.id.name);
+                nametv.setText(name);
+            }
+        } ;
+
+        lv.setAdapter(adapter);
+
 
 
 

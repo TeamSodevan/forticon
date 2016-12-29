@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape1">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#3A79FF"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:text="IOS ROOM"
+            android:textSize="20sp"
+            android:layout_centerVertical="true"
+            android:id="@+id/name"
+
+            />
+
+
+        <com.github.ivbaranov.mfb.MaterialFavoriteButton
+            android:id="@+id/like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            app:mfb_rotation_duration="400"
+            app:mfb_rotation_angle="360"
+            app:mfb_color="white"
+            />
+
+
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>
