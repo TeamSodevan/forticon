@@ -31,6 +31,8 @@ dependencies {
     compile 'net.cachapa.expandablelayout:expandablelayout:2.5'
     compile 'com.github.ivbaranov:materialfavoritebutton:0.1.2'
     compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2' // (v4.5)
+    compile 'com.joanzapata.iconify:android-iconify-simplelineicons:2.2.2' // (v1.0.0)
+
 
 
 
