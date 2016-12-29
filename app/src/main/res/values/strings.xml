@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Forticon</string>
+    <string name="title_activity_fort_points">FortPoints</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 </resources>
