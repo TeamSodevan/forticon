@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "237355515453",
+    "firebase_url": "https://forticon-2fd2d.firebaseio.com",
+    "project_id": "forticon-2fd2d",
+    "storage_bucket": "forticon-2fd2d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:237355515453:android:1a586a5f2c00d687",
+        "android_client_info": {
+          "package_name": "sodevan.com.forticon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "237355515453-q6pivb5phs5isodau9f5tl2nq54uunll.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "sodevan.com.forticon",
+            "certificate_hash": "955FF7E59DCEB7084A0CE0F88342F58EB690E527"
+          }
+        },
+        {
+          "client_id": "237355515453-na2k4cutadrhp8l3570u4qrutb6csjir.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLMm819jQ7XX8tC8Vzp68oktvGo8uOZq0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "237355515453-na2k4cutadrhp8l3570u4qrutb6csjir.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
