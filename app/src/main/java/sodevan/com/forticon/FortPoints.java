@@ -39,7 +39,6 @@ public class FortPoints extends AppCompatActivity
         database = FirebaseDatabase.getInstance() ;
         reference = database.getReference("Fortpoints").child(Fortid) ;
 
-        FirebaseListAdapter
 
 
 
