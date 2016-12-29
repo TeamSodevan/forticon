@@ -1,7 +1,9 @@
 package sodevan.com.forticon;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -13,23 +15,42 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.Iconify;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+import com.joanzapata.iconify.fonts.FontAwesomeModule;
+
+import org.altbeacon.beacon.BeaconConsumer;
+import org.altbeacon.beacon.BeaconManager;
+import org.altbeacon.beacon.BeaconParser;
+import org.altbeacon.beacon.Identifier;
+import org.altbeacon.beacon.MonitorNotifier;
+import org.altbeacon.beacon.Region;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class FortPoints extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, BeaconConsumer {
 
 
     FirebaseDatabase database ;
     DatabaseReference reference ;
     ArrayList<FortpointObject> ar ;
     ListView lv ;
+    TextView tv ;
+    private BeaconManager beaconManager;
+    public HashMap<String,Region> ssnRegionMap;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,13 +59,31 @@ public class FortPoints extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        beaconManager = BeaconManager.getInstanceForApplication(this);
+        beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout(BeaconParser.EDDYSTONE_UID_LAYOUT)) ;
+        beaconManager.bind(this);
+
+
+
+
+        Iconify.with(new FontAwesomeModule());
+        ImageView iv = (ImageView) findViewById(R.id.ims)  ;
+
+        IconDrawable D = new IconDrawable(this , FontAwesomeIcons.fa_feed) ;
+        iv.setImageDrawable(D);
 
         Intent recieve  = getIntent() ;
-        String Fortid =   recieve.getStringExtra("Fortid") ;
+        final String Fortid =   recieve.getStringExtra("Fortid") ;
+        String Fortname = recieve.getStringExtra("Fortname") ;
+
+         tv = (TextView) findViewById(R.id.nameq) ;
+
+        tv.setText(Fortname);
         lv = (ListView)findViewById(R.id.lv1);
 
 
         ar = new ArrayList<FortpointObject>() ;
+        ssnRegionMap = new HashMap<>() ;
 
 
         database = FirebaseDatabase.getInstance() ;
@@ -55,10 +94,13 @@ public class FortPoints extends AppCompatActivity
             protected void populateView(View v, FortpointObject model, int position) {
 
 
+
+
                 ar.add(model);
+           Context c =  FortPoints.this ;
 
 
-                String name = model.getName() ;
+                final String name = model.getName() ;
                 String namespace = model.getNamespace() ;
                 String instance = model.getInstance()  ;
                 String photolink  = model.getPhotolink() ;
@@ -66,6 +108,13 @@ public class FortPoints extends AppCompatActivity
 
                 TextView nametv = (TextView)v.findViewById(R.id.name);
                 nametv.setText(name);
+
+
+                Identifier namespaceid = Identifier.parse(namespace);
+                Identifier instance1 = Identifier.parse(instance) ;
+                ssnRegionMap.put(instance,new Region(name ,namespaceid, instance1 ,null));
+
+
             }
         } ;
 
@@ -126,6 +175,10 @@ public class FortPoints extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+
+
+
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -149,5 +202,39 @@ public class FortPoints extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onBeaconServiceConnect() {
+        beaconManager.addMonitorNotifier(new MonitorNotifier() {
+            @Override
+            public void didEnterRegion(Region region) {
+
+            }
+
+            @Override
+            public void didExitRegion(Region region) {
+
+            }
+
+            @Override
+            public void didDetermineStateForRegion(int i, Region region) {
+
+                Toast.makeText(FortPoints.this, region.getUniqueId(), Toast.LENGTH_SHORT).show();
+
+
+            }
+        });
+
+        try {
+            for(String key:ssnRegionMap.keySet()) {
+                Region region = ssnRegionMap.get(key);
+                beaconManager.startMonitoringBeaconsInRegion(region);
+
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
     }
 }

@@ -19,13 +19,16 @@ public class MainActivity extends AppCompatActivity {
 
     EditText User_Phoneno ;
     EditText password ;
-    Button btn  ;
+    Button btn , btn2 ;
 
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
 
 
 
@@ -46,12 +49,25 @@ public class MainActivity extends AppCompatActivity {
         User_Phoneno.setCompoundDrawablesWithIntrinsicBounds(user,null , null , null);
         password.setCompoundDrawablesWithIntrinsicBounds(passkey , null , null , null);
         btn = (Button) findViewById(R.id.login);
+        btn2 = (Button) findViewById(R.id.signup) ;
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i=new Intent(MainActivity.this,NearBy.class);
                 startActivity(i);
+            }
+        });
+
+        btn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i2 = new Intent(MainActivity.this , FortPoints.class);
+                i2.putExtra("Fortid", "1Coding Ninjas") ;
+                i2.putExtra("Fortname" , "Coding Ninjas");
+                startActivity(i2);
+
+
             }
         });
 
