@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -37,7 +38,6 @@ public class FortPoints extends AppCompatActivity
 
         database = FirebaseDatabase.getInstance() ;
         reference = database.getReference("Fortpoints").child(Fortid) ;
-
 
 
 

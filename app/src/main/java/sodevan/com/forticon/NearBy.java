@@ -7,10 +7,16 @@ import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class NearBy extends AppCompatActivity {
 double LAT,LON;
+    int f=0;
+    TextView tv2;
+    Location startPoint = new Location("LocA");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,24 +40,27 @@ double LAT,LON;
             return;
         }
         lm.requestLocationUpdates(
-                lm.GPS_PROVIDER,
+                LocationManager.GPS_PROVIDER,
                 0, 0, listener);
+        lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, listener);
 
-        Location startPoint = new Location("LocA");
-        //startPoint.setLatitude();
-        //startPoint.setLongitude();
 
+
+
+
+
+        tv2= (TextView) findViewById(R.id.textView2);
     }
 
     private class MyLocListnr implements LocationListener {
         @Override
         public void onLocationChanged(Location location) {
-            if(location.getLatitude()!=0&&location.getLongitude()!=0){
-            LAT = location.getLatitude();
+
+                LAT = location.getLatitude();
 
             LON = location.getLongitude();
+                setStartPoint(LAT,LON);
 
-                Toast.makeText(NearBy.this, "lat :"+LAT+" , lon : "+LON, Toast.LENGTH_SHORT).show();}
         }
 
         @Override
@@ -68,5 +77,16 @@ double LAT,LON;
         public void onProviderDisabled(String s) {
 
         }
+    }
+
+    private void setStartPoint(double LAT,double LON) {
+
+        startPoint.setLatitude(LAT);
+        startPoint.setLongitude(LON);
+        Location endPoint = new Location("LocA");
+        endPoint.setLatitude(28.6975717);
+        endPoint.setLongitude(77.1387377);
+        Toast.makeText(this, "Location set", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "dist is : "+startPoint.distanceTo(endPoint), Toast.LENGTH_SHORT).show();
     }
 }
