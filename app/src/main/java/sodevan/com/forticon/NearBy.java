@@ -8,8 +8,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,14 +29,27 @@ public class NearBy extends AppCompatActivity {
 double LAT,LON;
     int f=0;
     Location startPoint = new Location("LocA");
+
     FirebaseDatabase database = FirebaseDatabase.getInstance();
+
     DatabaseReference myRef = database.getReference("Venues");
+
     ArrayList<String> vens=new ArrayList<String>();
+
     ArrayAdapter<String> arrayAdapter;
+
+    ProgressBar spinner;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_near_by);
+        spinner = (ProgressBar)findViewById(R.id.progressBar1);
+
+        spinner.setVisibility(View.VISIBLE);
+
         LocationManager lm =
                 (LocationManager)
                         getSystemService(
@@ -102,12 +117,7 @@ double LAT,LON;
 
         startPoint.setLatitude(LAT);
         startPoint.setLongitude(LON);
-        Log.d("current", "lat = "+LAT+"current long :"+LON);
-        Location endPoint = new Location("LocA");
-        endPoint.setLatitude(28.6978765);
-        endPoint.setLongitude(77.1420569);
-        Toast.makeText(this, "Location set", Toast.LENGTH_SHORT).show();
-        Toast.makeText(this, "dist is : "+startPoint.distanceTo(endPoint), Toast.LENGTH_SHORT).show();
+        spinner.setVisibility(View.GONE);
         findnearby(startPoint);
     }
 
