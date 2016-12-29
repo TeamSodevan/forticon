@@ -18,7 +18,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.database.DatabaseReference;
@@ -62,6 +61,7 @@ public class FortPoints extends AppCompatActivity
         beaconManager = BeaconManager.getInstanceForApplication(this);
         beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout(BeaconParser.EDDYSTONE_UID_LAYOUT)) ;
         beaconManager.bind(this);
+
 
 
 
@@ -112,7 +112,13 @@ public class FortPoints extends AppCompatActivity
 
                 Identifier namespaceid = Identifier.parse(namespace);
                 Identifier instance1 = Identifier.parse(instance) ;
-                ssnRegionMap.put(instance,new Region(name ,namespaceid, instance1 ,null));
+                 Region region =   new  Region(name ,namespaceid, instance1 ,null);
+                try {
+                    beaconManager.startMonitoringBeaconsInRegion(region);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+
 
 
             }
@@ -220,21 +226,14 @@ public class FortPoints extends AppCompatActivity
             @Override
             public void didDetermineStateForRegion(int i, Region region) {
 
-                Toast.makeText(FortPoints.this, region.getUniqueId(), Toast.LENGTH_SHORT).show();
+                tv.setText(region.getUniqueId());
+
 
 
             }
         });
 
-        try {
-            for(String key:ssnRegionMap.keySet()) {
-                Region region = ssnRegionMap.get(key);
-                beaconManager.startMonitoringBeaconsInRegion(region);
 
-            }
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
 
     }
 }
