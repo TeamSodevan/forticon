@@ -8,6 +8,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +29,8 @@ double LAT,LON;
     Location startPoint = new Location("LocA");
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference("Venues");
-    ArrayList<Venues> vens=new ArrayList<Venues>();
+    ArrayList<String> vens=new ArrayList<String>();
+    ArrayAdapter<String> arrayAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +58,13 @@ double LAT,LON;
                 0, 0, listener);
         lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, listener);
 
-
+        arrayAdapter = new ArrayAdapter<String>(
+                this,
+                android.R.layout.simple_list_item_1,
+                vens );
+        ListView lv;
+        lv= (ListView) findViewById(R.id.lv);
+        lv.setAdapter(arrayAdapter);
 
 
 
@@ -93,15 +102,16 @@ double LAT,LON;
 
         startPoint.setLatitude(LAT);
         startPoint.setLongitude(LON);
+        Log.d("current", "lat = "+LAT+"current long :"+LON);
         Location endPoint = new Location("LocA");
-        endPoint.setLatitude(28.6975717);
-        endPoint.setLongitude(77.1387377);
+        endPoint.setLatitude(28.6978765);
+        endPoint.setLongitude(77.1420569);
         Toast.makeText(this, "Location set", Toast.LENGTH_SHORT).show();
         Toast.makeText(this, "dist is : "+startPoint.distanceTo(endPoint), Toast.LENGTH_SHORT).show();
         findnearby(startPoint);
     }
 
-    private void findnearby(Location startPoint) {
+    private void findnearby(final Location startPoint) {
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -109,12 +119,22 @@ double LAT,LON;
                 for (DataSnapshot dsp : dataSnapshot.getChildren()){
                     String name=dsp.child("name").getValue().toString();
                     String id=dsp.child("id").getValue().toString();
-                    double latit= (double) dsp.child("lat").getValue();
-                    double longi= (double) dsp.child("lon").getValue();
-                    Venues venues= new Venues(id,latit,longi,name);
-                    vens.add(venues);
+                    double latit= Double.parseDouble(dsp.child("lat").getValue().toString()) ;
+                    double longi= Double.parseDouble(dsp.child("long").getValue().toString());
+                    Location endPoint =new Location("LocA");
+                    endPoint.setLongitude(longi);
+                    endPoint.setLatitude(latit);
+                    double dist=startPoint.distanceTo(endPoint);
+                    Log.d("loc :",String.valueOf(dist));
+                    if (dist<1000){
+                        vens.add(name);
+                    }
+                    //Venues venues= new Venues(id,latit,longi,name);
+                    //vens.add(venues);
                     Log.d("name",dsp.child("name").getValue().toString());
+
                 }
+                arrayAdapter.notifyDataSetChanged();
 
             }
 

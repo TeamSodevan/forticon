@@ -1,10 +1,12 @@
 package sodevan.com.forticon;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -26,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
 
-        btn = (Button) findViewById(R.id.login);
 
 
 
@@ -44,6 +45,15 @@ public class MainActivity extends AppCompatActivity {
 
         User_Phoneno.setCompoundDrawablesWithIntrinsicBounds(user,null , null , null);
         password.setCompoundDrawablesWithIntrinsicBounds(passkey , null , null , null);
+        btn = (Button) findViewById(R.id.login);
+
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i=new Intent(MainActivity.this,NearBy.class);
+                startActivity(i);
+            }
+        });
 
 
     }
