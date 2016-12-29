@@ -11,12 +11,23 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+
+import sodevan.com.forticon.Models.Venues;
+
 public class NearBy extends AppCompatActivity {
 double LAT,LON;
     int f=0;
-    TextView tv2;
     Location startPoint = new Location("LocA");
-
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference myRef = database.getReference("Venues");
+    ArrayList<Venues> vens=new ArrayList<Venues>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +60,6 @@ double LAT,LON;
 
 
 
-        tv2= (TextView) findViewById(R.id.textView2);
     }
 
     private class MyLocListnr implements LocationListener {
@@ -88,5 +98,31 @@ double LAT,LON;
         endPoint.setLongitude(77.1387377);
         Toast.makeText(this, "Location set", Toast.LENGTH_SHORT).show();
         Toast.makeText(this, "dist is : "+startPoint.distanceTo(endPoint), Toast.LENGTH_SHORT).show();
+        findnearby(startPoint);
+    }
+
+    private void findnearby(Location startPoint) {
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                vens.clear();
+                for (DataSnapshot dsp : dataSnapshot.getChildren()){
+                    String name=dsp.child("name").getValue().toString();
+                    String id=dsp.child("id").getValue().toString();
+                    double latit= (double) dsp.child("lat").getValue();
+                    double longi= (double) dsp.child("lon").getValue();
+                    Venues venues= new Venues(id,latit,longi,name);
+                    vens.add(venues);
+                    Log.d("name",dsp.child("name").getValue().toString());
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 }
