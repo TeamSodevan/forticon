@@ -1,1 +1,3 @@
-This Android Application acts as a tour guide in forts using Beacon Technology. 
+# Forticon
+A simple android application for tourists which guide them in monuments and buildings using Becon Technology.
+
